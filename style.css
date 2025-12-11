@@ -1,13 +1,21 @@
 :root {
-    /* 顏色變數 */
-    --color-red: #ff8c8c;
+    /* 質感配色更新：柔和、低飽和度的色調 */
+    --color-background-light: #fdf6f3; /* 柔和米白 */
+    --color-background-dark: #f0e6e8;  /* 柔和淡粉 */
+    --color-accent: #c499ba; /* 質感淡紫/粉 */
+    --color-text-main: #5d4a66; /* 高級深紫灰 */
+    --color-gold: #e8d0a0; /* 淡金 */
+    
+    /* 軟糖圖片類別的基礎顏色，用於點擊動畫陰影 (雖然主要靠圖片) */
+    --color-red: #ff8c8c; 
     --color-yellow: #fff399;
     --color-green: #a4f5b8;
     --color-blue: #84e7ff;
     --color-orange: #ffb884;
     --color-pink: #ff9ee6;
+    
     --color-white: #ffffff;
-    --color-shadow: rgba(0, 0, 0, 0.2);
+    --color-shadow: rgba(0, 0, 0, 0.15);
     /* 字體 */
     --font-handwriting: 'Kalam', cursive;
 }
@@ -19,36 +27,31 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    /* 背景：柔和漸層 (Q版、繽紛糖果風) */
-    background: radial-gradient(circle at 50% 50%, #fefcfb 0%, #fddde6 30%, #f8c9d4 100%);
+    /* 背景：質感柔和漸層 */
+    background: radial-gradient(circle at 50% 50%, var(--color-background-light) 0%, var(--color-background-dark) 80%);
     font-family: Arial, sans-serif;
 }
 
 /* --- 新增：背景小熊軟糖/糖果散景效果 --- */
 body::before {
     content: '';
-    position: fixed; /* 保持在背景不隨滾動條移動 */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     
-    /* 使用多層次漸層模擬隨機的彩色糖果點 */
+    /* 使用淡色系創建重複圖案 */
     background-image: 
-        radial-gradient(circle at 10% 20%, var(--color-yellow) 2px, transparent 0),
-        radial-gradient(circle at 70% 80%, var(--color-pink) 3px, transparent 0),
-        radial-gradient(circle at 40% 50%, var(--color-blue) 1px, transparent 0),
-        radial-gradient(circle at 90% 10%, var(--color-orange) 2px, transparent 0),
-        radial-gradient(circle at 20% 90%, var(--color-green) 1.5px, transparent 0),
-        radial-gradient(circle at 55% 35%, var(--color-red) 2.5px, transparent 0);
+        radial-gradient(circle at 10% 20%, #e0d0cf 2px, transparent 0),
+        radial-gradient(circle at 70% 80%, #d5c8d0 3px, transparent 0),
+        radial-gradient(circle at 40% 50%, #e0d0cf 1px, transparent 0),
+        radial-gradient(circle at 90% 10%, #d5c8d0 2px, transparent 0);
         
-    /* 設置背景平鋪，創建重複圖案 */
     background-size: 100px 100px; 
     background-repeat: repeat;
     
-    /* 讓背景圖案非常柔和，不會干擾主要內容 */
-    opacity: 0.3; 
-    /* 確保在所有 DOM 內容的下方 */
+    opacity: 0.5; 
     z-index: -1; 
 }
 
@@ -59,10 +62,12 @@ body::before {
     width: 60px; 
     height: 80px;
     
+    /* 載入個別圖片 (路徑直接指向根目錄) */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
 
+    /* 移除 CSS 形狀 */
     border-radius: 0; 
     box-shadow: none;
     background-color: transparent !important; 
@@ -118,7 +123,7 @@ body::before {
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.8), 0 5px 15px var(--color-shadow);
 }
 
-/* --- 祝福語氣泡框 (糖果風背景) --- */
+/* --- 祝福語氣泡框 (質感風格) --- */
 .gummy-message {
     position: absolute;
     bottom: 140px; 
@@ -126,16 +131,19 @@ body::before {
     transform: translateX(-50%) scale(0); 
     padding: 15px 25px;
     width: 200px;
-    background: var(--color-white);
+    background: var(--color-background-light); /* 輕柔底色 */
+    border: 1px solid var(--color-accent); /* 柔和邊框 */
     border-radius: 25px;
     text-align: center;
     font-family: var(--font-handwriting);
     font-size: 18px;
     font-weight: 700;
-    color: #444;
+    color: var(--color-text-main); /* 高級深色文字 */
     line-height: 1.4;
-    z-index: 10;
+    /* 確保氣泡框在軟糖上方，但會被穿透 */
+    z-index: 10; 
     box-shadow: 0 4px 10px var(--color-shadow);
+    /* 關鍵修復：讓點擊穿透氣泡框 */
     pointer-events: none; 
 }
 
@@ -147,11 +155,11 @@ body::before {
     transform: translateX(-50%) rotate(45deg);
     width: 20px;
     height: 20px;
-    background: var(--color-white);
+    background: var(--color-background-light); /* 尾巴顏色匹配 */
     border-radius: 5px;
 }
 
-/* --- 最終彩蛋文字 --- */
+/* --- 最終彩蛋文字 (高級質感) --- */
 #final-message {
     position: absolute;
     top: 50%;
@@ -160,13 +168,39 @@ body::before {
     font-family: var(--font-handwriting);
     font-size: 8vw; 
     font-weight: 700;
-    color: var(--color-pink); 
+    color: var(--color-accent); /* 質感主色 */
     opacity: 0;
     z-index: 30; 
-    text-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); 
+    /* 增加陰影，模擬浮雕或糖霜邊緣 */
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8), /* 內部發光 */
+        0 4px 8px rgba(93, 74, 102, 0.5); /* 外部柔和陰影 */
     white-space: nowrap;
 }
 
 .small-gummy {
     z-index: 5;
+}
+
+/* --- 新增：最終彩蛋軟糖環繞動畫容器 --- */
+#final-gummy-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; /* 環繞半徑基礎尺寸 */
+    height: 300px;
+    opacity: 0;
+    z-index: 25;
+}
+.final-gummy-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px; /* 軟糖圖片尺寸 */
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* 初始圖片由 JS 動態設定 */
 }
