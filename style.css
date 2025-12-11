@@ -19,40 +19,41 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    /* 背景：柔和漸層 */
+    /* 背景：柔和漸層 (Q版、繽紛糖果風) */
     background: radial-gradient(circle at 50% 50%, #fefcfb 0%, #fddde6 30%, #f8c9d4 100%);
     font-family: Arial, sans-serif;
 }
 
-/* --- 小熊軟糖基礎樣式 (使用 Sprite 圖片) --- */
+/* --- 小熊軟糖基礎樣式 (使用個別 PNG 檔案) --- */
 .gummy {
     position: absolute;
     /* 軟糖在頁面上的顯示尺寸 */
     width: 60px; 
     height: 80px;
     
-    /* 核心 Sprite 設定：替換為您的圖片路徑 */
-    background-image: url('gummy-sprite.png'); 
-    background-size: 400% 200%; /* 假設圖片是 4x2 矩陣 */
+    /* 核心設定：載入個別圖片 */
+    background-size: contain; /* 確保圖片縮放至容器內 */
     background-repeat: no-repeat;
-    
-    /* 確保元素本身是透明的，只顯示背景圖 */
+    background-position: center center; /* 確保圖片居中 */
+
+    /* 移除所有 CSS 形狀和陰影，完全依賴 PNG 圖像的透明度 */
     border-radius: 0; 
     box-shadow: none;
+    background-color: transparent !important; 
     
     cursor: pointer;
+    /* 設置過渡，用於點擊時的彈跳動畫 */
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-    opacity: 1; /* 確保圖片能正常顯示 */
-    background-color: transparent !important; /* 忽略純色背景 */
+    opacity: 1; 
 }
 
-/* Sprite 顏色定位 (對應 4x2 圖片的座標) */
-.gummy.red { background-position: 50% 0%; } /* 第 1 行, 第 3 隻 (紅色) */
-.gummy.yellow { background-position: 75% 0%; } /* 第 1 行, 第 4 隻 (黃色) */
-.gummy.green { background-position: 25% 100%; } /* 第 2 行, 第 2 隻 (綠色) */
-.gummy.blue { background-position: 50% 100%; } /* 第 2 行, 第 3 隻 (藍色) */
-.gummy.orange { background-position: 0% 100%; } /* 第 2 行, 第 1 隻 (橙色) */
-.gummy.pink { background-position: 75% 100%; } /* 第 2 行, 第 4 隻 (紫色軟糖) */
+/* 載入個別 PNG 圖像 (關鍵修正：路徑直接指向根目錄) */
+.gummy.red { background-image: url('gummy-red.png'); }
+.gummy.yellow { background-image: url('gummy-yellow.png'); }
+.gummy.green { background-image: url('gummy-green.png'); }
+.gummy.blue { background-image: url('gummy-blue.png'); }
+.gummy.orange { background-image: url('gummy-orange.png'); }
+.gummy.pink { background-image: url('gummy-pink.png'); } /* 對應亭妤的粉/紫色軟糖 */
 
 /* --- 初始中心軟糖 --- */
 #initial-gummy {
@@ -73,7 +74,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    gap: 30px; 
+    gap: 30px; /* 軟糖間距 */
 }
 
 /* 主軟糖的包裹層 */
@@ -81,15 +82,22 @@ body {
     width: 90px;
     height: 120px;
     position: relative;
+    /* 初始隱藏，等待 JS 讓它彈性出現 */
     opacity: 0; 
     z-index: 10;
 }
 
-/* --- 祝福語氣泡框 (包含點擊穿透修復) --- */
+.main-gummy:hover {
+    /* 輕微的滑鼠懸停陰影效果 */
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.8), 0 5px 15px var(--color-shadow);
+}
+
+/* --- 祝福語氣泡框 (糖果風背景) --- */
 .gummy-message {
     position: absolute;
     bottom: 140px; 
     left: 50%;
+    /* 初始縮小隱藏，等待點擊彈出 */
     transform: translateX(-50%) scale(0); 
     padding: 15px 25px;
     width: 200px;
@@ -108,6 +116,7 @@ body {
 }
 
 .gummy-message::after {
+    /* 氣泡框的糖果尾巴 */
     content: '';
     position: absolute;
     bottom: -15px;
@@ -119,7 +128,7 @@ body {
     border-radius: 5px;
 }
 
-/* --- 點擊提示文字樣式 (確保 z-index 高於軟糖) --- */
+/* --- 點擊提示文字樣式 --- */
 #click-prompt {
     position: absolute;
     top: 40%; 
@@ -129,6 +138,7 @@ body {
     font-size: 3vw;
     font-weight: 700;
     color: var(--color-red); 
+    /* 初始隱藏，等待 JS 讓它脈衝出現 */
     opacity: 0; 
     z-index: 20; 
     white-space: nowrap;
@@ -145,6 +155,7 @@ body {
     font-size: 8vw; 
     font-weight: 700;
     color: var(--color-pink); 
+    /* 初始隱藏，等待 JS 讓它出現 */
     opacity: 0;
     z-index: 30; 
     text-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); 
@@ -154,4 +165,3 @@ body {
 .small-gummy {
     z-index: 5;
 }
-
