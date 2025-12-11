@@ -1,4 +1,4 @@
-// 確保 GSAP 庫在 HTML 中已正確引入
+// 確保 GSAP 核心庫和 MotionPath 插件在 HTML 中已正確引入
 const colors = ['red', 'yellow', 'green', 'blue', 'orange', 'pink'];
 const messages = [
     // 1. 紅色軟糖 (葉欣)
@@ -176,8 +176,9 @@ function handleGummyClick(event) {
 
 // --- 新增：創建並啟動軟糖環繞動畫 ---
 function startGummyRingAnimation() {
+    // 判斷螢幕寬度，如果小於 768px，則使用較小的半徑
+    const ringRadius = window.innerWidth <= 768 ? 150 : 250; 
     const ringContainer = document.getElementById('final-gummy-ring');
-    const ringRadius = 250; // 環繞半徑
     const items = [];
     
     // 根據 colors 順序創建六個軟糖元素
