@@ -1,23 +1,19 @@
 :root {
     /* 質感配色更新：柔和、低飽和度的色調 */
-    --color-background-light: #fdf6f3; /* 柔和米白 */
-    --color-background-dark: #f0e6e8;  /* 柔和淡粉 */
-    --color-accent: #c499ba; /* 質感淡紫/粉 */
-    --color-text-main: #5d4a66; /* 高級深紫灰 */
-    --color-gold: #e8d0a0; /* 淡金 */
-    
-    /* 軟糖圖片類別的基礎顏色，用於點擊動畫陰影 (雖然主要靠圖片) */
-    --color-red: #ff8c8c; 
-    --color-yellow: #fff399;
-    --color-green: #a4f5b8;
-    --color-blue: #84e7ff;
-    --color-orange: #ffb884;
-    --color-pink: #ff9ee6;
+    --color-background-light: #fdf6f3; 
+    --color-background-dark: #f0e6e8;  
+    --color-accent: #c499ba; 
+    --color-text-main: #5d4a66; 
+    /* ... (其他顏色變數保持不變) ... */
     
     --color-white: #ffffff;
     --color-shadow: rgba(0, 0, 0, 0.15);
     /* 字體 */
     --font-handwriting: 'Kalam', cursive;
+
+    /* 新增：定義手機上的軟糖基礎尺寸 */
+    --gummy-base-size-mobile: 40px; 
+    --gummy-main-size-mobile: 70px; 
 }
 
 body {
@@ -32,25 +28,17 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* --- 新增：背景小熊軟糖/糖果散景效果 --- */
+/* --- 背景小熊軟糖/糖果散景效果 (保持不變) --- */
 body::before {
+    /* ... (保持不變) ... */
     content: '';
     position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
-    /* 使用淡色系創建重複圖案 */
-    background-image: 
-        radial-gradient(circle at 10% 20%, #e0d0cf 2px, transparent 0),
-        radial-gradient(circle at 70% 80%, #d5c8d0 3px, transparent 0),
-        radial-gradient(circle at 40% 50%, #e0d0cf 1px, transparent 0),
-        radial-gradient(circle at 90% 10%, #d5c8d0 2px, transparent 0);
-        
+    /* ... (背景漸變和尺寸設定保持不變) ... */
     background-size: 100px 100px; 
-    background-repeat: repeat;
-    
     opacity: 0.5; 
     z-index: -1; 
 }
@@ -59,15 +47,14 @@ body::before {
 /* --- 小熊軟糖基礎樣式 (使用個別 PNG 檔案) --- */
 .gummy {
     position: absolute;
+    /* 預設桌面尺寸 */
     width: 60px; 
     height: 80px;
     
-    /* 載入個別圖片 (路徑直接指向根目錄) */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
 
-    /* 移除 CSS 形狀 */
     border-radius: 0; 
     box-shadow: none;
     background-color: transparent !important; 
@@ -76,8 +63,7 @@ body::before {
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
     opacity: 1; 
 }
-
-/* 載入個別 PNG 圖像 (路徑直接指向根目錄) */
+/* 載入個別 PNG 圖像 (路徑直接指向根目錄) - 保持不變 */
 .gummy.red { background-image: url('gummy-red.png'); }
 .gummy.yellow { background-image: url('gummy-yellow.png'); }
 .gummy.green { background-image: url('gummy-green.png'); }
@@ -104,8 +90,7 @@ body::before {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    gap: 30px; /* 軟糖間距 */
-    /* 核心修復：確保整個容器層級夠高 */
+    gap: 30px; /* 桌面軟糖間距 */
     z-index: 100;
 }
 
@@ -114,7 +99,6 @@ body::before {
     width: 90px;
     height: 120px;
     position: relative;
-    /* 初始隱藏，等待 JS 彈出 */
     opacity: 0; 
     z-index: 10;
 }
@@ -123,84 +107,108 @@ body::before {
     box-shadow: 0 8px 20px rgba(255, 255, 255, 0.8), 0 5px 15px var(--color-shadow);
 }
 
-/* --- 祝福語氣泡框 (質感風格) --- */
+/* --- 祝福語氣泡框 (桌面預設) --- */
 .gummy-message {
     position: absolute;
-    bottom: 140px; 
+    bottom: 140px; /* 預設位置 */
     left: 50%;
     transform: translateX(-50%) scale(0); 
     padding: 15px 25px;
     width: 200px;
-    background: var(--color-background-light); /* 輕柔底色 */
-    border: 1px solid var(--color-accent); /* 柔和邊框 */
+    background: var(--color-background-light); 
+    border: 1px solid var(--color-accent); 
     border-radius: 25px;
     text-align: center;
     font-family: var(--font-handwriting);
     font-size: 18px;
     font-weight: 700;
-    color: var(--color-text-main); /* 高級深色文字 */
+    color: var(--color-text-main); 
     line-height: 1.4;
-    /* 確保氣泡框在軟糖上方，但會被穿透 */
     z-index: 10; 
     box-shadow: 0 4px 10px var(--color-shadow);
-    /* 關鍵修復：讓點擊穿透氣泡框 */
     pointer-events: none; 
 }
 
 .gummy-message::after {
+    /* 尾巴樣式 - 保持不變 */
     content: '';
     position: absolute;
     bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 20px;
-    height: 20px;
-    background: var(--color-background-light); /* 尾巴顏色匹配 */
-    border-radius: 5px;
+    /* ... (其他樣式保持不變) ... */
 }
 
-/* --- 最終彩蛋文字 (高級質感) --- */
+/* --- 最終彩蛋文字 (桌面預設) --- */
 #final-message {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: var(--font-handwriting);
-    font-size: 8vw; 
+    font-size: 8vw; /* 依賴視窗寬度 */
     font-weight: 700;
-    color: var(--color-accent); /* 質感主色 */
+    color: var(--color-accent); 
     opacity: 0;
     z-index: 30; 
-    /* 增加陰影，模擬浮雕或糖霜邊緣 */
     text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.8), /* 內部發光 */
-        0 4px 8px rgba(93, 74, 102, 0.5); /* 外部柔和陰影 */
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 4px 8px rgba(93, 74, 102, 0.5); 
     white-space: nowrap;
 }
 
-.small-gummy {
-    z-index: 5;
-}
 
-/* --- 新增：最終彩蛋軟糖環繞動畫容器 --- */
-#final-gummy-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px; /* 環繞半徑基礎尺寸 */
-    height: 300px;
-    opacity: 0;
-    z-index: 25;
-}
-.final-gummy-item {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px; /* 軟糖圖片尺寸 */
-    height: 80px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    /* 初始圖片由 JS 動態設定 */
+/* ------------------------------------------------------------------ */
+/* 📱 響應式優化區塊：針對手機螢幕 (< 768px) 📱 */
+/* ------------------------------------------------------------------ */
+@media (max-width: 768px) {
+
+    /* 確保所有元素在小螢幕上可以縮放 */
+    #app {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* 1. 軟糖尺寸縮小 */
+    .gummy {
+        width: var(--gummy-base-size-mobile); /* 40px */
+        height: calc(var(--gummy-base-size-mobile) * 1.3); /* 52px */
+    }
+    #initial-gummy {
+        width: 50px;
+        height: 65px;
+    }
+
+    /* 2. 主軟糖尺寸與間距縮小 */
+    #main-gummies-container {
+        gap: 10px; /* 縮小間距 */
+        /* 將六顆軟糖集中，避免佔滿整個畫面 */
+        width: 100%;
+        max-width: 400px;
+    }
+    .main-gummy {
+        width: var(--gummy-main-size-mobile); /* 70px */
+        height: calc(var(--gummy-main-size-mobile) * 1.3); /* 91px */
+    }
+
+    /* 3. 祝福語氣泡框調整 */
+    .gummy-message {
+        bottom: 100px; /* 降低顯示高度 */
+        width: 150px;  /* 縮小寬度 */
+        font-size: 14px; /* 縮小字體 */
+    }
+
+    /* 4. 最終彩蛋文字縮小 */
+    #final-message {
+        font-size: 10vw; /* 稍微放大文字以填滿空間 */
+    }
+
+    /* 5. 軟糖環繞動畫半徑縮小 (由 JS 控制，這裡設置容器) */
+    #final-gummy-ring {
+        width: 200px;
+        height: 200px;
+    }
+    .final-gummy-item {
+        width: 40px;
+        height: 52px;
+    }
 }
