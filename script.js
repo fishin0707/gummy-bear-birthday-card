@@ -79,7 +79,7 @@ function startMergeAnimation() {
         wrapper.className = 'main-gummy';
         wrapper.id = `gummy-${index}`;
         wrapper.setAttribute('data-clicked', 'false');
-        // 關鍵修復：強制所有 Wrapper 都有獨立的高層級
+        // 核心修復：強制所有 Wrapper 都有獨立的高層級 (解決點擊問題)
         wrapper.style.zIndex = 100 + index; 
 
         const gummyShape = document.createElement('div');
@@ -114,7 +114,6 @@ function startMergeAnimation() {
                 duration: 0.8,
                 ease: "elastic.out(1, 0.5)", 
                 stagger: 0.1,
-                // 軟糖出現後，直接完成
                 onComplete: () => {
                     console.log("Gummies are ready to be clicked.");
                 }
@@ -175,7 +174,62 @@ function handleGummyClick(event) {
     }
 }
 
-// --- 階段 5: 最終彩蛋 ---
+// --- 新增：創建並啟動軟糖環繞動畫 ---
+function startGummyRingAnimation() {
+    const ringContainer = document.getElementById('final-gummy-ring');
+    const ringRadius = 250; // 環繞半徑
+    const items = [];
+    
+    // 根據 colors 順序創建六個軟糖元素
+    colors.forEach((color, index) => {
+        const item = document.createElement('div');
+        item.className = 'final-gummy-item';
+        // 載入對應的 PNG 圖片
+        item.style.backgroundImage = `url('gummy-${color}.png')`;
+        ringContainer.appendChild(item);
+        items.push(item);
+    });
+
+    gsap.to(ringContainer, { opacity: 1, duration: 1.5, delay: 0.8 });
+
+    // 核心：GSAP 實現環繞和漂浮動畫
+    gsap.to(items, {
+        duration: 15,
+        ease: "none",
+        repeat: -1,
+        stagger: {
+            each: 0.2,
+            repeat: -1,
+            yoyo: true
+        },
+        motionPath: {
+            path: (i) => {
+                const angle = (Math.PI * 2) * (i / colors.length);
+                const x = ringRadius * Math.cos(angle);
+                const y = ringRadius * Math.sin(angle);
+                // 創建一個橢圓路徑，增加漂浮感
+                return `M0,0 C${x/2},${y/2} ${x*1.5},${y*1.5} ${x},${y}`;
+            },
+            type: "rotational",
+            align: "self",
+            alignOrigin: [0.5, 0.5],
+            autoRotate: true
+        }
+    });
+
+    // 增加微幅的上下漂浮感
+    gsap.to(items, {
+        y: "+=10",
+        yoyo: true,
+        repeat: -1,
+        duration: 3,
+        stagger: 0.5,
+        ease: "sine.inOut"
+    });
+}
+
+
+// --- 階段 5: 最終彩蛋 (更新：呼叫環繞動畫) ---
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
@@ -188,7 +242,7 @@ function showFinalMessage() {
         ease: "power1.in"
     });
 
-    // 2. 最終文字柔和出現 (模擬軟糖聚合)
+    // 2. 最終文字柔和出現
     gsap.to(finalMessage, {
         opacity: 1,
         scale: 1.05,
@@ -205,6 +259,9 @@ function showFinalMessage() {
              });
         }
     });
+    
+    // 3. 啟動軟糖環繞動畫
+    startGummyRingAnimation();
 }
 
 document.addEventListener('DOMContentLoaded', startInitialAnimation);
