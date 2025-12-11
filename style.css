@@ -53,7 +53,7 @@ body {
 .gummy.green { background-image: url('gummy-green.png'); }
 .gummy.blue { background-image: url('gummy-blue.png'); }
 .gummy.orange { background-image: url('gummy-orange.png'); }
-.gummy.pink { background-image: url('gummy-pink.png'); } /* 對應亭妤的粉/紫色軟糖 */
+.gummy.pink { background-image: url('gummy-pink.png'); } 
 
 /* --- 初始中心軟糖 --- */
 #initial-gummy {
@@ -84,6 +84,7 @@ body {
     position: relative;
     /* 初始隱藏，等待 JS 讓它彈性出現 */
     opacity: 0; 
+    /* z-index 由 JS 動態分配，確保可點擊性 */
     z-index: 10;
 }
 
@@ -126,23 +127,6 @@ body {
     height: 20px;
     background: var(--color-white);
     border-radius: 5px;
-}
-
-/* --- 點擊提示文字樣式 --- */
-#click-prompt {
-    position: absolute;
-    top: 40%; 
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-handwriting);
-    font-size: 3vw;
-    font-weight: 700;
-    color: var(--color-red); 
-    /* 初始隱藏，等待 JS 讓它脈衝出現 */
-    opacity: 0; 
-    z-index: 20; 
-    white-space: nowrap;
-    text-shadow: 0 0 5px var(--color-white);
 }
 
 /* --- 最終彩蛋文字 --- */
