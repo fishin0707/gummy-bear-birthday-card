@@ -1,3 +1,4 @@
+// 確保 GSAP 庫在 HTML 中已正確引入
 const colors = ['red', 'yellow', 'green', 'blue', 'orange', 'pink'];
 const messages = [
     // 1. 紅色軟糖 (葉欣)
@@ -22,14 +23,12 @@ const messages = [
 let clickedCount = 0;
 const totalGummies = 6;
 const smallGummyCount = 80;
-let musicPlayed = false; // 新增：用於標記音樂是否已播放 (解決瀏覽器自動播放限制)
+let musicPlayed = false;
 
-// ... [createSmallGummy 函數保持不變] ...
-
-// --- 階段 1 & 2: 初始爆發與散落 (保持不變) ---
+// --- 輔助函數：生成隨機軟糖粒子 ---
 function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const size = Math.random() * 20 + 10; // 10px 到 30px
+    const size = Math.random() * 20 + 10;
     const gummy = document.createElement('div');
     gummy.className = `gummy small-gummy ${color}`;
     gummy.style.width = `${size}px`;
@@ -38,6 +37,7 @@ function createSmallGummy() {
     return gummy;
 }
 
+// --- 階段 1 & 2: 初始爆發與散落 ---
 function startInitialAnimation() {
     const initialGummy = document.getElementById('initial-gummy');
     const smallGummies = [];
@@ -64,7 +64,7 @@ function startInitialAnimation() {
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 (更新：呼叫點擊提示) ---
+// --- 階段 3: 合體成六顆主軟糖 ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
@@ -107,25 +107,25 @@ function startMergeAnimation() {
                 duration: 0.8,
                 ease: "elastic.out(1, 0.5)", 
                 stagger: 0.1,
-                onComplete: showClickPrompt // <--- 新增：顯示點擊提示
+                onComplete: showClickPrompt 
             });
         }
     });
 }
 
-// --- 新增：顯示點擊提示動畫 ---
+// --- 顯示點擊提示動畫 ---
 function showClickPrompt() {
     gsap.to("#click-prompt", {
         opacity: 1,
         scale: 1.1,
         duration: 0.8,
-        repeat: -1, // 無限循環
-        yoyo: true, // 往返動畫
+        repeat: -1, 
+        yoyo: true, 
         ease: "power1.inOut"
     });
 }
 
-// --- 新增：音樂播放邏輯 (需由使用者點擊後觸發) ---
+// --- 音樂播放邏輯 ---
 function startMusic() {
     if (musicPlayed) return;
     const music = document.getElementById('birthday-music');
@@ -133,23 +133,21 @@ function startMusic() {
         music.play().then(() => {
             musicPlayed = true;
         }).catch(error => {
-            console.warn("Audio autoplay blocked by browser. Music will not play until a second user interaction.");
+            console.warn("Audio autoplay blocked by browser.");
         });
     }
 }
 
-// --- 階段 4: 處理點擊與祝福語展示 (更新：加入音樂觸發) ---
+// --- 階段 4: 處理點擊與祝福語展示 ---
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
     const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true';
     
-    // 嘗試在第一次點擊時播放音樂 (繞過瀏覽器自動播放限制)
     startMusic();
 
     if (isClicked) return;
 
-    // ... [軟糖彈跳動畫] ...
     gsap.to(gummyWrapper.querySelector('.gummy'), {
         scale: 1.15,
         rotation: 5,
@@ -159,7 +157,6 @@ function handleGummyClick(event) {
         ease: "power1.out"
     });
 
-    // ... [祝福語氣泡彈出] ...
     gsap.to(messageBox, {
         scale: 1,
         opacity: 1,
@@ -170,27 +167,26 @@ function handleGummyClick(event) {
     gummyWrapper.setAttribute('data-clicked', 'true');
     clickedCount++;
 
-    // 檢查是否全部點擊
     if (clickedCount === totalGummies) {
         showFinalMessage();
     }
 }
 
-// --- 階段 5: 最終彩蛋 (更新：隱藏點擊提示) ---
+// --- 階段 5: 最終彩蛋 ---
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
     const clickPrompt = document.getElementById('click-prompt');
 
-    // 1. 隱藏主軟糖和點擊提示
-    gsap.to([clickPrompt, mainGummies], { // <--- 隱藏點擊提示
+    // 1. 隱藏所有互動元素
+    gsap.to([clickPrompt, mainGummies], {
         opacity: 0, 
         scale: 0.5, 
         duration: 0.5,
         ease: "power1.in"
     });
 
-    // 2. 文字柔和出現 (模擬軟糖聚合)
+    // 2. 最終文字柔和出現 (模擬軟糖聚合)
     gsap.to(finalMessage, {
         opacity: 1,
         scale: 1.05,
