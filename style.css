@@ -1,19 +1,62 @@
-/* ... [其餘 CSS 內容保持不變，包含之前的水彩風格調整] ... */
+/* 將此段程式碼放入 style.css 檔案中 */
 
-/* --- 新增：點擊提示文字樣式 --- */
-#click-prompt {
-    position: absolute;
-    top: 40%; /* 放在六顆軟糖上方 */
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-handwriting);
-    font-size: 3vw;
-    font-weight: 700;
-    color: var(--color-red); /* 醒目顏色 */
-    opacity: 0; /* 初始隱藏，由 JS 控制顯示 */
-    z-index: 15;
-    white-space: nowrap;
-    text-shadow: 0 0 5px var(--color-white);
+:root {
+    /* 調整軟糖顏色，使其更柔和 (配合水彩圖) */
+    --color-red: #ff8c8c;
+    --color-yellow: #fff399;
+    --color-green: #a4f5b8;
+    --color-blue: #84e7ff;
+    --color-orange: #ffb884;
+    --color-pink: #ff9ee6;
+    --color-white: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.2);
+    /* ... 其他變數保持不變 ... */
 }
 
-/* ... [其餘 CSS 內容保持不變] ... */
+/* 這是呈現小熊軟糖形狀的關鍵樣式：.gummy */
+.gummy {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    
+    /* 核心：模擬小熊頭部、耳朵和身體的圓滑不規則形狀 */
+    /* 數值比例可以微調，以符合您的水彩圖形狀 */
+    border-radius: 65% 65% 50% 50% / 60% 60% 40% 40%;
+    
+    /* 模擬水彩/果凍的半透明感 */
+    opacity: 0.85; 
+    
+    /* 模擬果凍的光澤和立體感：使用內陰影 (inset) 模擬高光 */
+    box-shadow: 
+        inset 0 10px 10px rgba(255, 255, 255, 0.4), /* 內部白色光澤 */
+        0 5px 15px var(--color-shadow); /* 外部陰影，增強浮動感 */
+    
+    cursor: pointer;
+    transition: box-shadow 0.15s ease-out;
+}
+
+/* 軟糖顏色定義 */
+.gummy.red { background: var(--color-red); }
+.gummy.yellow { background: var(--color-yellow); }
+.gummy.green { background: var(--color-green); }
+.gummy.blue { background: var(--color-blue); }
+.gummy.orange { background: var(--color-orange); }
+.gummy.pink { background: var(--color-pink); }
+
+/* --- 初始軟糖大小 --- */
+#initial-gummy {
+    width: 80px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- 主軟糖容器 (用於點擊) --- */
+.main-gummy {
+    width: 90px;
+    height: 120px;
+    position: relative;
+    opacity: 0; 
+    z-index: 10;
+}
