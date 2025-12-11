@@ -1,30 +1,32 @@
 const colors = ['red', 'yellow', 'green', 'blue', 'orange', 'pink'];
-// 更新的六段生日祝福語 (與 colors 順序對應: 紅, 黃, 綠, 藍, 橘, 粉)
 const messages = [
     // 1. 紅色軟糖 (葉欣)
-    "Dear 崇傑：這是我第二次祝崇傑生日快樂了!!! 您是很棒很棒的主管，找了很多可愛的同事，我們像第二到第三季的鬼殺隊，祝福生日快樂、明年旅遊不用再關心辦公室新人!!!",
+    "葉欣：Dear崇傑～這是我第二次祝崇傑生日快樂了!!! 您是很棒很棒的主管，找了很多可愛的同事，我們像第二到第三季的鬼殺隊，祝福生日快樂、明年旅遊不用再關心辦公室新人!!!",
     
     // 2. 黃色軟糖 (薇雲)
-    "崇傑生日快樂~很感謝第一份工作遇到很讚讚的主管！願你每天都和小熊軟糖一樣繽紛多彩，去日本都能訂到最便宜的住宿~",
+    "薇雲：崇傑生日快樂~很感謝第一份工作遇到很讚讚的主管！願你每天都和小熊軟糖一樣繽紛多彩，去日本都能訂到最便宜的住宿~",
     
     // 3. 綠色軟糖 (采瑾)
-    "生日快樂～～謝謝崇傑平常的照顧！生日這天就不用減肥了，可以吃小熊軟糖吃到飽！",
+    "采瑾：生日快樂～～謝謝崇傑平常的照顧！生日這天就不用減肥了，可以吃小熊軟糖吃到飽！",
     
     // 4. 藍色軟糖 (嘉琳)
-    "崇傑生日快樂！🎉 感謝你一直以來的幫助，讓我們在工作中能更有方向地前進~祝福你新的一年順心順利、身體健康，你是我們最喜歡的主管~",
+    "嘉琳：崇傑生日快樂！🎉 感謝你一直以來的幫助，讓我們在工作中能更有方向地前進~祝福你新的一年順心順利、身體健康，你是我們最喜歡的主管~",
     
     // 5. 橘色軟糖 (玉瑄)
-    "崇傑生日快樂 ㊗️你身體健康、平安順心、大展鴻圖，願您在新的一歲天天開心",
+    "玉瑄：崇傑生日快樂 ㊗️你身體健康、平安順心、大展鴻圖，願您在新的一歲天天開心",
     
     // 6. 粉色軟糖 (亭妤)
-    "崇傑！雖然才進來一個月，但你真的是個很好的主管！超棒的 祝你生日大快樂🎉以後一樣要麻煩你了！最後最後～我會努力跟大家一起奮鬥的💪"
+    "亭妤：崇傑！雖然才進來一個月，但你真的是個很好的主管！超棒的 祝你生日大快樂🎉以後一樣要麻煩你了！最後最後～我會努力跟大家一起奮鬥的💪"
 ];
 
 let clickedCount = 0;
 const totalGummies = 6;
 const smallGummyCount = 80;
+let musicPlayed = false; // 新增：用於標記音樂是否已播放 (解決瀏覽器自動播放限制)
 
-// --- 輔助函數：生成隨機軟糖粒子 ---
+// ... [createSmallGummy 函數保持不變] ...
+
+// --- 階段 1 & 2: 初始爆發與散落 (保持不變) ---
 function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.random() * 20 + 10; // 10px 到 30px
@@ -36,12 +38,10 @@ function createSmallGummy() {
     return gummy;
 }
 
-// --- 階段 1 & 2: 初始爆發與散落 ---
 function startInitialAnimation() {
     const initialGummy = document.getElementById('initial-gummy');
     const smallGummies = [];
 
-    // 1. 生成軟糖粒子
     for (let i = 0; i < smallGummyCount; i++) {
         smallGummies.push(createSmallGummy());
     }
@@ -49,11 +49,9 @@ function startInitialAnimation() {
     const tl = gsap.timeline({ defaults: { duration: 0.8, ease: "power2.out" } });
 
     tl
-    // 階段 1: 延遲與準備爆發
-    .to(initialGummy, { scale: 1.2, duration: 0.2, ease: "power1.inOut" }, 2) // 2秒後放大
-    .to(initialGummy, { opacity: 0, scale: 0.1, duration: 0.1 }, "<") // 瞬間隱藏
+    .to(initialGummy, { scale: 1.2, duration: 0.2, ease: "power1.inOut" }, 2) 
+    .to(initialGummy, { opacity: 0, scale: 0.1, duration: 0.1 }, "<") 
 
-    // 階段 2: 小軟糖爆發散落
     .to(smallGummies, {
         duration: 2,
         x: () => (Math.random() - 0.5) * window.innerWidth * 1.5,
@@ -62,16 +60,15 @@ function startInitialAnimation() {
         scale: () => Math.random() * 0.5 + 0.5,
         ease: "power3.out",
         stagger: 0.01,
-        onComplete: startMergeAnimation // 散落完成後開始聚合
+        onComplete: startMergeAnimation
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 ---
+// --- 階段 3: 合體成六顆主軟糖 (更新：呼叫點擊提示) ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
 
-    // 創建六顆主軟糖 DOM
     const mainGummies = colors.map((color, index) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'main-gummy';
@@ -83,8 +80,7 @@ function startMergeAnimation() {
         
         const messageBox = document.createElement('div');
         messageBox.className = 'gummy-message';
-        // 確保訊息顯示人名
-        messageBox.innerHTML = messages[index].replace(/\n/g, '<br>'); // 換行處理
+        messageBox.innerHTML = messages[index].replace(/\n/g, '<br>');
 
         wrapper.appendChild(gummyShape);
         wrapper.appendChild(messageBox);
@@ -94,39 +90,66 @@ function startMergeAnimation() {
         return wrapper;
     });
 
-    // 小軟糖聚合動畫
     gsap.to(smallGummies, {
         duration: 1.5,
         opacity: 0,
         scale: 0.1,
-        // 隨機吸附到中央區域
         x: () => (Math.random() - 0.5) * 200, 
         y: () => (Math.random() - 0.5) * 200,
         ease: "power2.in", 
         stagger: 0.005,
         onComplete: () => {
-            smallGummies.forEach(g => g.remove()); // 清除粒子
-            // 主軟糖彈性出現
+            smallGummies.forEach(g => g.remove());
+            
             gsap.fromTo(mainGummies, { scale: 0.5, opacity: 0 }, {
                 scale: 1,
                 opacity: 1,
                 duration: 0.8,
                 ease: "elastic.out(1, 0.5)", 
-                stagger: 0.1
+                stagger: 0.1,
+                onComplete: showClickPrompt // <--- 新增：顯示點擊提示
             });
         }
     });
 }
 
-// --- 階段 4: 處理點擊與祝福語展示 ---
+// --- 新增：顯示點擊提示動畫 ---
+function showClickPrompt() {
+    gsap.to("#click-prompt", {
+        opacity: 1,
+        scale: 1.1,
+        duration: 0.8,
+        repeat: -1, // 無限循環
+        yoyo: true, // 往返動畫
+        ease: "power1.inOut"
+    });
+}
+
+// --- 新增：音樂播放邏輯 (需由使用者點擊後觸發) ---
+function startMusic() {
+    if (musicPlayed) return;
+    const music = document.getElementById('birthday-music');
+    if (music) {
+        music.play().then(() => {
+            musicPlayed = true;
+        }).catch(error => {
+            console.warn("Audio autoplay blocked by browser. Music will not play until a second user interaction.");
+        });
+    }
+}
+
+// --- 階段 4: 處理點擊與祝福語展示 (更新：加入音樂觸發) ---
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
     const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true';
+    
+    // 嘗試在第一次點擊時播放音樂 (繞過瀏覽器自動播放限制)
+    startMusic();
 
     if (isClicked) return;
 
-    // 1. 軟糖彈跳動畫
+    // ... [軟糖彈跳動畫] ...
     gsap.to(gummyWrapper.querySelector('.gummy'), {
         scale: 1.15,
         rotation: 5,
@@ -136,7 +159,7 @@ function handleGummyClick(event) {
         ease: "power1.out"
     });
 
-    // 2. 祝福語氣泡彈出 (使用 back.out 模擬彈性)
+    // ... [祝福語氣泡彈出] ...
     gsap.to(messageBox, {
         scale: 1,
         opacity: 1,
@@ -144,23 +167,23 @@ function handleGummyClick(event) {
         ease: "back.out(1.7)"
     });
     
-    // 3. 標記為已點擊
     gummyWrapper.setAttribute('data-clicked', 'true');
     clickedCount++;
 
-    // 4. 檢查是否全部點擊 (階段 5 彩蛋)
+    // 檢查是否全部點擊
     if (clickedCount === totalGummies) {
         showFinalMessage();
     }
 }
 
-// --- 階段 5: 最終彩蛋 ---
+// --- 階段 5: 最終彩蛋 (更新：隱藏點擊提示) ---
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
+    const clickPrompt = document.getElementById('click-prompt');
 
-    // 1. 隱藏主軟糖
-    gsap.to(mainGummies, { 
+    // 1. 隱藏主軟糖和點擊提示
+    gsap.to([clickPrompt, mainGummies], { // <--- 隱藏點擊提示
         opacity: 0, 
         scale: 0.5, 
         duration: 0.5,
@@ -174,12 +197,10 @@ function showFinalMessage() {
         duration: 2,
         ease: "power2.out", 
         delay: 0.5,
-        // 增加文字邊框閃爍效果
         onComplete: () => {
              gsap.to(finalMessage, {
-                '-webkit-text-stroke-color': 'var(--color-red)',
-                'text-stroke-color': 'var(--color-red)',
-                duration: 0.5,
+                opacity: 0.8,
+                duration: 0.8,
                 repeat: -1,
                 yoyo: true,
                 ease: "power1.inOut"
@@ -188,5 +209,4 @@ function showFinalMessage() {
     });
 }
 
-// 網頁載入完成後啟動動畫
-document.addEventListener('DOMContentLoaded', startInitialAnimation);1
+document.addEventListener('DOMContentLoaded', startInitialAnimation);
