@@ -32,7 +32,7 @@ body {
     height: 80px;
     
     /* 核心 Sprite 設定：替換為您的圖片路徑 */
-    background-image: url('images/gummy-sprite.png'); 
+    background-image: url('gummy-sprite.png'); 
     background-size: 400% 200%; /* 假設圖片是 4x2 矩陣 */
     background-repeat: no-repeat;
     
@@ -154,3 +154,4 @@ body {
 .small-gummy {
     z-index: 5;
 }
+
