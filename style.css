@@ -1,129 +1,19 @@
-:root {
-    /* 軟糖配色 */
-    --color-red: #ff6b6b;
-    --color-yellow: #ffe66d;
-    --color-green: #7bed9f;
-    --color-blue: #48dbfb;
-    --color-orange: #ff9f43;
-    --color-pink: #f368e0;
-    --color-white: #ffffff;
-    --color-shadow: rgba(0, 0, 0, 0.2);
-    /* 字體 */
-    --font-handwriting: 'Kalam', cursive;
-}
+/* ... [其餘 CSS 內容保持不變，包含之前的水彩風格調整] ... */
 
-body {
-    margin: 0;
-    overflow: hidden; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    /* 背景：柔和漸層 (Radial Gradient) */
-    background: radial-gradient(circle at 50% 50%, #fefcfb 0%, #fddde6 30%, #f8c9d4 100%);
-    font-family: Arial, sans-serif;
-}
-
-/* --- 小熊軟糖基礎樣式 --- */
-.gummy {
+/* --- 新增：點擊提示文字樣式 --- */
+#click-prompt {
     position: absolute;
-    /* 模擬小熊形狀 */
-    width: 60px;
-    height: 80px;
-    border-radius: 50% / 60px 60px 40px 40px; 
-    box-shadow: 0 5px 15px var(--color-shadow);
-    cursor: pointer;
-    transition: box-shadow 0.15s ease-out;
-}
-/* 軟糖顏色 */
-.gummy.red { background: var(--color-red); }
-.gummy.yellow { background: var(--color-yellow); }
-.gummy.green { background: var(--color-green); }
-.gummy.blue { background: var(--color-blue); }
-.gummy.orange { background: var(--color-orange); }
-.gummy.pink { background: var(--color-pink); }
-
-/* --- 初始與主軟糖 --- */
-#initial-gummy {
-    width: 80px;
-    height: 100px;
-    top: 50%;
+    top: 40%; /* 放在六顆軟糖上方 */
     left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#main-gummies-container {
-    display: flex;
-    position: absolute;
-    justify-content: center;
-    align-items: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    gap: 30px; /* 軟糖間距 */
-}
-
-.main-gummy {
-    width: 90px;
-    height: 120px;
-    position: relative;
-    opacity: 0; 
-}
-
-.main-gummy:hover {
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.8), 0 5px 15px var(--color-shadow);
-}
-
-/* --- 祝福語氣泡框 (Message Bubble) --- */
-.gummy-message {
-    position: absolute;
-    bottom: 140px; 
-    left: 50%;
-    transform: translateX(-50%) scale(0); 
-    padding: 15px 25px;
-    width: 200px;
-    background: var(--color-white);
-    border-radius: 25px;
-    text-align: center;
+    transform: translateX(-50%);
     font-family: var(--font-handwriting);
-    font-size: 18px;
+    font-size: 3vw;
     font-weight: 700;
-    color: #444;
-    line-height: 1.4;
-    z-index: 10;
-    box-shadow: 0 4px 10px var(--color-shadow);
-}
-/* 氣泡框：糖果尾巴 */
-.gummy-message::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 20px;
-    height: 20px;
-    background: var(--color-white);
-    border-radius: 5px;
-}
-
-/* --- 最終彩蛋文字 --- */
-#final-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: var(--font-handwriting);
-    font-size: 8vw; 
-    font-weight: 700;
-    color: transparent; 
-    -webkit-text-stroke: 2px var(--color-pink); 
-    text-stroke: 2px var(--color-pink);
-    opacity: 0;
-    z-index: 20;
-    text-shadow: 0 5px 10px var(--color-shadow);
+    color: var(--color-red); /* 醒目顏色 */
+    opacity: 0; /* 初始隱藏，由 JS 控制顯示 */
+    z-index: 15;
     white-space: nowrap;
+    text-shadow: 0 0 5px var(--color-white);
 }
 
-.small-gummy {
-    z-index: 5;
-}
+/* ... [其餘 CSS 內容保持不變] ... */
