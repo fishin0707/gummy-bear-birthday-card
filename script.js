@@ -42,6 +42,12 @@ function startInitialAnimation() {
     const initialGummy = document.getElementById('initial-gummy');
     const smallGummies = [];
 
+    // 檢查初始軟糖是否存在，如果不存在則直接跳到下一階段
+    if (!initialGummy) {
+        startMergeAnimation();
+        return;
+    }
+
     for (let i = 0; i < smallGummyCount; i++) {
         smallGummies.push(createSmallGummy());
     }
@@ -64,7 +70,7 @@ function startInitialAnimation() {
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 ---
+// --- 階段 3: 合體成六顆主軟糖 (已移除 showClickPrompt 呼叫) ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
@@ -74,6 +80,8 @@ function startMergeAnimation() {
         wrapper.className = 'main-gummy';
         wrapper.id = `gummy-${index}`;
         wrapper.setAttribute('data-clicked', 'false');
+        // 關鍵修復：確保所有 Wrapper 都在前面，避免點擊被遮擋
+        wrapper.style.zIndex = 100 + index; 
 
         const gummyShape = document.createElement('div');
         gummyShape.className = `gummy ${color}`;
@@ -107,21 +115,12 @@ function startMergeAnimation() {
                 duration: 0.8,
                 ease: "elastic.out(1, 0.5)", 
                 stagger: 0.1,
-                onComplete: showClickPrompt 
+                // 軟糖出現後，直接完成，不再呼叫 showClickPrompt
+                onComplete: () => {
+                    console.log("Gummies are ready to be clicked.");
+                }
             });
         }
-    });
-}
-
-// --- 顯示點擊提示動畫 ---
-function showClickPrompt() {
-    gsap.to("#click-prompt", {
-        opacity: 1,
-        scale: 1.1,
-        duration: 0.8,
-        repeat: -1, 
-        yoyo: true, 
-        ease: "power1.inOut"
     });
 }
 
@@ -130,10 +129,11 @@ function startMusic() {
     if (musicPlayed) return;
     const music = document.getElementById('birthday-music');
     if (music) {
+        // 嘗試播放音樂
         music.play().then(() => {
             musicPlayed = true;
         }).catch(error => {
-            console.warn("Audio autoplay blocked by browser.");
+            console.warn("Audio autoplay blocked by browser. User needs to interact first.");
         });
     }
 }
@@ -146,27 +146,32 @@ function handleGummyClick(event) {
     
     startMusic();
 
+    // 關鍵修復：確保已經點擊的軟糖不再響應
     if (isClicked) return;
 
-    gsap.to(gummyWrapper.querySelector('.gummy'), {
+    // 點擊動畫
+    gsap.timeline()
+    .to(gummyWrapper.querySelector('.gummy'), {
         scale: 1.15,
         rotation: 5,
         yoyo: true,
         repeat: 1,
         duration: 0.2,
         ease: "power1.out"
-    });
-
-    gsap.to(messageBox, {
+    })
+    // 氣泡框彈出
+    .to(messageBox, {
         scale: 1,
         opacity: 1,
         duration: 0.4,
         ease: "back.out(1.7)"
-    });
-    
+    }, 0); // 與軟糖動畫同時開始
+
+    // 標記為已點擊
     gummyWrapper.setAttribute('data-clicked', 'true');
     clickedCount++;
 
+    // 檢查是否所有軟糖都點完了
     if (clickedCount === totalGummies) {
         showFinalMessage();
     }
@@ -176,10 +181,10 @@ function handleGummyClick(event) {
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
-    const clickPrompt = document.getElementById('click-prompt');
+    // const clickPrompt = document.getElementById('click-prompt'); // 已移除
 
     // 1. 隱藏所有互動元素
-    gsap.to([clickPrompt, mainGummies], {
+    gsap.to(mainGummies, {
         opacity: 0, 
         scale: 0.5, 
         duration: 0.5,
