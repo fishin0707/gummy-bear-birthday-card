@@ -42,7 +42,6 @@ function startInitialAnimation() {
     const initialGummy = document.getElementById('initial-gummy');
     const smallGummies = [];
 
-    // 檢查初始軟糖是否存在，如果不存在則直接跳到下一階段
     if (!initialGummy) {
         startMergeAnimation();
         return;
@@ -70,7 +69,7 @@ function startInitialAnimation() {
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 (已移除 showClickPrompt 呼叫) ---
+// --- 階段 3: 合體成六顆主軟糖 (修復 z-index) ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
@@ -80,7 +79,7 @@ function startMergeAnimation() {
         wrapper.className = 'main-gummy';
         wrapper.id = `gummy-${index}`;
         wrapper.setAttribute('data-clicked', 'false');
-        // 關鍵修復：確保所有 Wrapper 都在前面，避免點擊被遮擋
+        // 關鍵修復：強制所有 Wrapper 都有獨立的高層級
         wrapper.style.zIndex = 100 + index; 
 
         const gummyShape = document.createElement('div');
@@ -115,7 +114,7 @@ function startMergeAnimation() {
                 duration: 0.8,
                 ease: "elastic.out(1, 0.5)", 
                 stagger: 0.1,
-                // 軟糖出現後，直接完成，不再呼叫 showClickPrompt
+                // 軟糖出現後，直接完成
                 onComplete: () => {
                     console.log("Gummies are ready to be clicked.");
                 }
@@ -129,7 +128,6 @@ function startMusic() {
     if (musicPlayed) return;
     const music = document.getElementById('birthday-music');
     if (music) {
-        // 嘗試播放音樂
         music.play().then(() => {
             musicPlayed = true;
         }).catch(error => {
@@ -138,7 +136,7 @@ function startMusic() {
     }
 }
 
-// --- 階段 4: 處理點擊與祝福語展示 ---
+// --- 階段 4: 處理點擊與祝福語展示 (點擊修復) ---
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
@@ -165,7 +163,7 @@ function handleGummyClick(event) {
         opacity: 1,
         duration: 0.4,
         ease: "back.out(1.7)"
-    }, 0); // 與軟糖動畫同時開始
+    }, 0);
 
     // 標記為已點擊
     gummyWrapper.setAttribute('data-clicked', 'true');
@@ -181,7 +179,6 @@ function handleGummyClick(event) {
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
-    // const clickPrompt = document.getElementById('click-prompt'); // 已移除
 
     // 1. 隱藏所有互動元素
     gsap.to(mainGummies, {
