@@ -26,7 +26,7 @@ const totalGummies = 6;
 const smallGummyCount = 80;
 let musicPlayed = false;
 
-// --- 輔助函數：生成隨機軟糖粒子 ---
+// --- 輔助函數：生成隨機軟糖粒子 (保持不變) ---
 function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.random() * 20 + 10;
@@ -38,7 +38,7 @@ function createSmallGummy() {
     return gummy;
 }
 
-// --- 階段 1 & 2: 初始爆發與散落 ---
+// --- 階段 1 & 2: 初始爆發與散落 (保持不變) ---
 function startInitialAnimation() {
     const initialGummy = document.getElementById('initial-gummy');
     const smallGummies = [];
@@ -94,7 +94,7 @@ function startMergeAnimation() {
 
         // 3. 附加元素到包裹層
         wrapper.appendChild(gummyShape);
-        wrapper.appendChild(messageBox); // 👈 確保 messageBox 被正確附加！
+        wrapper.appendChild(messageBox); 
         mainContainer.appendChild(wrapper);
 
         wrapper.addEventListener('click', handleGummyClick);
@@ -126,7 +126,7 @@ function startMergeAnimation() {
     });
 }
 
-// --- 音樂播放邏輯 ---
+// --- 音樂播放邏輯 (保持不變) ---
 function startMusic() {
     if (musicPlayed) return;
     const music = document.getElementById('birthday-music');
@@ -143,7 +143,7 @@ function startMusic() {
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
-    const isClicked = gummyWrapper.getAttribute('data-clicked', 'true');
+    const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true'; // 修正為正確的屬性檢查
     
     startMusic();
 
@@ -190,6 +190,7 @@ function startBouncingGummiesAnimation() {
         gummy.style.backgroundImage = `url('gummy-${color}.png')`;
         gummy.style.width = `${size}px`;
         gummy.style.height = `${size * 1.3}px`;
+        // 確保這些軟糖是在最終文字的周圍區域生成
         gummy.style.left = `calc(50% + ${Math.random() * 100 - 50}px)`;
         gummy.style.top = `calc(50% + ${Math.random() * 100 - 50}px)`;
         gummy.style.opacity = 0; 
@@ -230,7 +231,6 @@ function startGummyRingAnimation() {
     const ringContainer = document.getElementById('final-gummy-ring');
     const items = [];
     
-    // 6 顆主軟糖的環繞
     colors.forEach((color, index) => {
         const item = document.createElement('div');
         item.className = 'final-gummy-item main-ring-gummy'; 
@@ -312,4 +312,4 @@ function showFinalMessage() {
     startBouncingGummiesAnimation();
 }
 
-document.addEventListener('DOMContentLoaded', startInitialAnimation);9
+document.addEventListener('DOMContentLoaded', startInitialAnimation);
