@@ -26,12 +26,12 @@ const totalGummies = 6;
 const smallGummyCount = 80;
 let musicPlayed = false;
 
-// --- 輔助函數：生成隨機軟糖粒子 (保持不變) ---
+// --- 輔助函數：生成隨機軟糖粒子 (確保使用 PNG 圖片類別) ---
 function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.random() * 20 + 10;
     const gummy = document.createElement('div');
-    gummy.className = `gummy small-gummy ${color}`;
+    gummy.className = `gummy small-gummy ${color}`; // 使用顏色類別，CSS 會自動應用 PNG 背景圖
     gummy.style.width = `${size}px`;
     gummy.style.height = `${size * 1.3}px`;
     document.getElementById('app').appendChild(gummy);
@@ -70,7 +70,7 @@ function startInitialAnimation() {
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 (修復氣泡框元素創建與 z-index) ---
+// --- 階段 3: 合體成六顆主軟糖 (確保氣泡框與點擊修復) ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
@@ -80,12 +80,11 @@ function startMergeAnimation() {
         wrapper.className = 'main-gummy';
         wrapper.id = `gummy-${index}`;
         wrapper.setAttribute('data-clicked', 'false');
-        // 核心修復：強制所有 Wrapper 都有獨立的高層級 (解決點擊問題)
         wrapper.style.zIndex = 100 + index; 
 
         // 1. 創建軟糖形狀 (用於顯示圖片)
         const gummyShape = document.createElement('div');
-        gummyShape.className = `gummy ${color}`;
+        gummyShape.className = `gummy ${color}`; // 圖片由 CSS 載入
         
         // 2. 創建祝福語氣泡框 (關鍵修復點！)
         const messageBox = document.createElement('div');
@@ -143,7 +142,7 @@ function startMusic() {
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
-    const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true'; // 修正為正確的屬性檢查
+    const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true'; 
     
     startMusic();
 
@@ -173,7 +172,7 @@ function handleGummyClick(event) {
     }
 }
 
-// --- 新增：創建並啟動額外的隨機跳動軟糖 ---
+// --- 新增：創建並啟動額外的隨機跳動軟糖 (確保使用 PNG 路徑) ---
 function startBouncingGummiesAnimation() {
     const bounceGummyCount = window.innerWidth <= 768 ? 15 : 30; // 手機和平板顯示數量
     const bounceRadius = window.innerWidth <= 768 ? 180 : 300; // 跳動範圍半徑
@@ -187,10 +186,10 @@ function startBouncingGummiesAnimation() {
         const size = Math.random() * 40 + 20; // 軟糖大小隨機
         const gummy = document.createElement('div');
         gummy.className = `final-gummy-item bouncy-gummy`; 
-        gummy.style.backgroundImage = `url('gummy-${color}.png')`;
+        // 👈 使用獨立 PNG 檔案路徑
+        gummy.style.backgroundImage = `url('gummy-${color}.png')`; 
         gummy.style.width = `${size}px`;
         gummy.style.height = `${size * 1.3}px`;
-        // 確保這些軟糖是在最終文字的周圍區域生成
         gummy.style.left = `calc(50% + ${Math.random() * 100 - 50}px)`;
         gummy.style.top = `calc(50% + ${Math.random() * 100 - 50}px)`;
         gummy.style.opacity = 0; 
@@ -225,7 +224,7 @@ function startBouncingGummiesAnimation() {
 }
 
 
-// --- 新增：創建並啟動環繞文字的軟糖 (6顆主軟糖環繞) ---
+// --- 新增：創建並啟動環繞文字的軟糖 (6顆主軟糖環繞) (確保使用 PNG 路徑) ---
 function startGummyRingAnimation() {
     const ringRadius = window.innerWidth <= 768 ? 150 : 250; 
     const ringContainer = document.getElementById('final-gummy-ring');
@@ -234,6 +233,7 @@ function startGummyRingAnimation() {
     colors.forEach((color, index) => {
         const item = document.createElement('div');
         item.className = 'final-gummy-item main-ring-gummy'; 
+        // 👈 使用獨立 PNG 檔案路徑
         item.style.backgroundImage = `url('gummy-${color}.png')`;
         ringContainer.appendChild(item);
         items.push(item);
