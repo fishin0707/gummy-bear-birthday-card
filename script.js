@@ -31,7 +31,8 @@ function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.random() * 20 + 10;
     const gummy = document.createElement('div');
-    gummy.className = `gummy small-gummy ${color}`; // 使用顏色類別，CSS 會自動應用 PNG 背景圖
+    // 👈 圖片由 CSS 根據 .red/.yellow 等 class 載入
+    gummy.className = `gummy small-gummy ${color}`; 
     gummy.style.width = `${size}px`;
     gummy.style.height = `${size * 1.3}px`;
     document.getElementById('app').appendChild(gummy);
@@ -84,9 +85,9 @@ function startMergeAnimation() {
 
         // 1. 創建軟糖形狀 (用於顯示圖片)
         const gummyShape = document.createElement('div');
-        gummyShape.className = `gummy ${color}`; // 圖片由 CSS 載入
+        gummyShape.className = `gummy ${color}`; // 👈 圖片由 CSS 載入
         
-        // 2. 創建祝福語氣泡框 (關鍵修復點！)
+        // 2. 創建祝福語氣泡框 
         const messageBox = document.createElement('div');
         messageBox.className = 'gummy-message';
         messageBox.innerHTML = messages[index].replace(/\n/g, '<br>');
@@ -187,7 +188,7 @@ function startBouncingGummiesAnimation() {
         const gummy = document.createElement('div');
         gummy.className = `final-gummy-item bouncy-gummy`; 
         // 👈 使用獨立 PNG 檔案路徑
-        gummy.style.backgroundImage = `url('gummy-${color}.png')`; 
+        gummy.style.backgroundImage = `url('gummy-${color}.png')`;
         gummy.style.width = `${size}px`;
         gummy.style.height = `${size * 1.3}px`;
         gummy.style.left = `calc(50% + ${Math.random() * 100 - 50}px)`;
