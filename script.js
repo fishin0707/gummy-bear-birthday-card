@@ -26,12 +26,11 @@ const totalGummies = 6;
 const smallGummyCount = 80;
 let musicPlayed = false;
 
-// --- 輔助函數：生成隨機軟糖粒子 (確保使用 PNG 圖片類別) ---
+// --- 輔助函數：生成隨機軟糖粒子 (保持不變) ---
 function createSmallGummy() {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.random() * 20 + 10;
     const gummy = document.createElement('div');
-    // 👈 圖片由 CSS 根據 .red/.yellow 等 class 載入
     gummy.className = `gummy small-gummy ${color}`; 
     gummy.style.width = `${size}px`;
     gummy.style.height = `${size * 1.3}px`;
@@ -85,7 +84,7 @@ function startMergeAnimation() {
 
         // 1. 創建軟糖形狀 (用於顯示圖片)
         const gummyShape = document.createElement('div');
-        gummyShape.className = `gummy ${color}`; // 👈 圖片由 CSS 載入
+        gummyShape.className = `gummy ${color}`; 
         
         // 2. 創建祝福語氣泡框 
         const messageBox = document.createElement('div');
@@ -173,7 +172,7 @@ function handleGummyClick(event) {
     }
 }
 
-// --- 新增：創建並啟動額外的隨機跳動軟糖 (確保使用 PNG 路徑) ---
+// --- 新增：創建並啟動額外的隨機跳動軟糖 ---
 function startBouncingGummiesAnimation() {
     const bounceGummyCount = window.innerWidth <= 768 ? 15 : 30; // 手機和平板顯示數量
     const bounceRadius = window.innerWidth <= 768 ? 180 : 300; // 跳動範圍半徑
@@ -187,7 +186,6 @@ function startBouncingGummiesAnimation() {
         const size = Math.random() * 40 + 20; // 軟糖大小隨機
         const gummy = document.createElement('div');
         gummy.className = `final-gummy-item bouncy-gummy`; 
-        // 👈 使用獨立 PNG 檔案路徑
         gummy.style.backgroundImage = `url('gummy-${color}.png')`;
         gummy.style.width = `${size}px`;
         gummy.style.height = `${size * 1.3}px`;
@@ -205,7 +203,7 @@ function startBouncingGummiesAnimation() {
         duration: 0.8,
         ease: "power2.out",
         stagger: 0.05,
-        delay: 0.5 
+        delay: 0.8 // 增加延遲，讓環繞軟糖先出現
     });
 
     bouncingGummies.forEach(gummy => {
@@ -225,7 +223,7 @@ function startBouncingGummiesAnimation() {
 }
 
 
-// --- 新增：創建並啟動環繞文字的軟糖 (6顆主軟糖環繞) (確保使用 PNG 路徑) ---
+// --- 新增：創建並啟動環繞文字的軟糖 (6顆主軟糖環繞) ---
 function startGummyRingAnimation() {
     const ringRadius = window.innerWidth <= 768 ? 150 : 250; 
     const ringContainer = document.getElementById('final-gummy-ring');
@@ -234,13 +232,13 @@ function startGummyRingAnimation() {
     colors.forEach((color, index) => {
         const item = document.createElement('div');
         item.className = 'final-gummy-item main-ring-gummy'; 
-        // 👈 使用獨立 PNG 檔案路徑
         item.style.backgroundImage = `url('gummy-${color}.png')`;
         ringContainer.appendChild(item);
         items.push(item);
     });
 
-    gsap.to(ringContainer, { opacity: 1, duration: 1.5, delay: 0.8 });
+    // 讓容器立即出現
+    gsap.to(ringContainer, { opacity: 1, duration: 0.5, delay: 0.5 });
 
     gsap.to(items, {
         duration: 15,
