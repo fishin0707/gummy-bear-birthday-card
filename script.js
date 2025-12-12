@@ -1,6 +1,7 @@
 // 確保 GSAP 核心庫和 MotionPath 插件在 HTML 中已正確引入
 const colors = ['red', 'yellow', 'green', 'blue', 'orange', 'pink'];
 const messages = [
+    // ⚠️ 確保這個祝福語陣列是完整且正確的 ⚠️
     // 1. 紅色軟糖 (葉欣)
     "葉欣：Dear崇傑～這是我第二次祝崇傑生日快樂了!!! 您是很棒很棒的主管，找了很多可愛的同事，我們像第二到第三季的鬼殺隊，祝福生日快樂、明年旅遊不用再關心辦公室新人!!!",
     
@@ -69,7 +70,7 @@ function startInitialAnimation() {
     }, "<0.1");
 }
 
-// --- 階段 3: 合體成六顆主軟糖 (修復 z-index) ---
+// --- 階段 3: 合體成六顆主軟糖 (修復氣泡框元素創建與 z-index) ---
 function startMergeAnimation() {
     const smallGummies = document.querySelectorAll('.small-gummy');
     const mainContainer = document.getElementById('main-gummies-container');
@@ -82,15 +83,18 @@ function startMergeAnimation() {
         // 核心修復：強制所有 Wrapper 都有獨立的高層級 (解決點擊問題)
         wrapper.style.zIndex = 100 + index; 
 
+        // 1. 創建軟糖形狀 (用於顯示圖片)
         const gummyShape = document.createElement('div');
         gummyShape.className = `gummy ${color}`;
         
+        // 2. 創建祝福語氣泡框 (關鍵修復點！)
         const messageBox = document.createElement('div');
         messageBox.className = 'gummy-message';
         messageBox.innerHTML = messages[index].replace(/\n/g, '<br>');
 
+        // 3. 附加元素到包裹層
         wrapper.appendChild(gummyShape);
-        wrapper.appendChild(messageBox);
+        wrapper.appendChild(messageBox); // 👈 確保 messageBox 被正確附加！
         mainContainer.appendChild(wrapper);
 
         wrapper.addEventListener('click', handleGummyClick);
@@ -139,14 +143,12 @@ function startMusic() {
 function handleGummyClick(event) {
     const gummyWrapper = event.currentTarget;
     const messageBox = gummyWrapper.querySelector('.gummy-message');
-    const isClicked = gummyWrapper.getAttribute('data-clicked') === 'true';
+    const isClicked = gummyWrapper.getAttribute('data-clicked', 'true');
     
     startMusic();
 
-    // 關鍵修復：確保已經點擊的軟糖不再響應
     if (isClicked) return;
 
-    // 點擊動畫
     gsap.timeline()
     .to(gummyWrapper.querySelector('.gummy'), {
         scale: 1.15,
@@ -156,7 +158,6 @@ function handleGummyClick(event) {
         duration: 0.2,
         ease: "power1.out"
     })
-    // 氣泡框彈出
     .to(messageBox, {
         scale: 1,
         opacity: 1,
@@ -164,28 +165,75 @@ function handleGummyClick(event) {
         ease: "back.out(1.7)"
     }, 0);
 
-    // 標記為已點擊
     gummyWrapper.setAttribute('data-clicked', 'true');
     clickedCount++;
 
-    // 檢查是否所有軟糖都點完了
     if (clickedCount === totalGummies) {
         showFinalMessage();
     }
 }
 
-// --- 新增：創建並啟動軟糖環繞動畫 ---
+// --- 新增：創建並啟動額外的隨機跳動軟糖 ---
+function startBouncingGummiesAnimation() {
+    const bounceGummyCount = window.innerWidth <= 768 ? 15 : 30; // 手機和平板顯示數量
+    const bounceRadius = window.innerWidth <= 768 ? 180 : 300; // 跳動範圍半徑
+    const bouncingGummies = [];
+
+    const ringContainer = document.getElementById('final-gummy-ring');
+    if (!ringContainer) return;
+
+    for (let i = 0; i < bounceGummyCount; i++) {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 40 + 20; // 軟糖大小隨機
+        const gummy = document.createElement('div');
+        gummy.className = `final-gummy-item bouncy-gummy`; 
+        gummy.style.backgroundImage = `url('gummy-${color}.png')`;
+        gummy.style.width = `${size}px`;
+        gummy.style.height = `${size * 1.3}px`;
+        gummy.style.left = `calc(50% + ${Math.random() * 100 - 50}px)`;
+        gummy.style.top = `calc(50% + ${Math.random() * 100 - 50}px)`;
+        gummy.style.opacity = 0; 
+        gummy.style.zIndex = 20; 
+        ringContainer.appendChild(gummy);
+        bouncingGummies.push(gummy);
+    }
+
+    gsap.to(bouncingGummies, {
+        opacity: 1,
+        scale: () => Math.random() * 0.8 + 0.5, 
+        duration: 0.8,
+        ease: "power2.out",
+        stagger: 0.05,
+        delay: 0.5 
+    });
+
+    bouncingGummies.forEach(gummy => {
+        // 隨機跳動和漂浮動畫
+        gsap.to(gummy, {
+            x: () => (Math.random() - 0.5) * bounceRadius * 2, 
+            y: () => (Math.random() - 0.5) * bounceRadius * 2, 
+            rotation: () => Math.random() * 360 - 180, 
+            scale: () => Math.random() * 0.8 + 0.8, 
+            duration: () => Math.random() * 4 + 3, 
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+            delay: Math.random() * 2 
+        });
+    });
+}
+
+
+// --- 新增：創建並啟動環繞文字的軟糖 (6顆主軟糖環繞) ---
 function startGummyRingAnimation() {
-    // 判斷螢幕寬度，如果小於 768px，則使用較小的半徑
     const ringRadius = window.innerWidth <= 768 ? 150 : 250; 
     const ringContainer = document.getElementById('final-gummy-ring');
     const items = [];
     
-    // 根據 colors 順序創建六個軟糖元素
+    // 6 顆主軟糖的環繞
     colors.forEach((color, index) => {
         const item = document.createElement('div');
-        item.className = 'final-gummy-item';
-        // 載入對應的 PNG 圖片
+        item.className = 'final-gummy-item main-ring-gummy'; 
         item.style.backgroundImage = `url('gummy-${color}.png')`;
         ringContainer.appendChild(item);
         items.push(item);
@@ -193,7 +241,6 @@ function startGummyRingAnimation() {
 
     gsap.to(ringContainer, { opacity: 1, duration: 1.5, delay: 0.8 });
 
-    // 核心：GSAP 實現環繞和漂浮動畫
     gsap.to(items, {
         duration: 15,
         ease: "none",
@@ -208,7 +255,6 @@ function startGummyRingAnimation() {
                 const angle = (Math.PI * 2) * (i / colors.length);
                 const x = ringRadius * Math.cos(angle);
                 const y = ringRadius * Math.sin(angle);
-                // 創建一個橢圓路徑，增加漂浮感
                 return `M0,0 C${x/2},${y/2} ${x*1.5},${y*1.5} ${x},${y}`;
             },
             type: "rotational",
@@ -218,7 +264,6 @@ function startGummyRingAnimation() {
         }
     });
 
-    // 增加微幅的上下漂浮感
     gsap.to(items, {
         y: "+=10",
         yoyo: true,
@@ -230,7 +275,7 @@ function startGummyRingAnimation() {
 }
 
 
-// --- 階段 5: 最終彩蛋 (更新：呼叫環繞動畫) ---
+// --- 階段 5: 最終彩蛋 (同時啟動雙重動畫) ---
 function showFinalMessage() {
     const finalMessage = document.getElementById('final-message');
     const mainGummies = document.querySelectorAll('.main-gummy');
@@ -261,9 +306,10 @@ function showFinalMessage() {
         }
     });
     
-    // 3. 啟動軟糖環繞動畫
+    // 3. 啟動主要的軟糖環繞動畫 (6顆)
     startGummyRingAnimation();
+    // 4. 啟動額外隨機跳動的軟糖動畫 (更多顆)
+    startBouncingGummiesAnimation();
 }
 
-document.addEventListener('DOMContentLoaded', startInitialAnimation);
-
+document.addEventListener('DOMContentLoaded', startInitialAnimation);9
